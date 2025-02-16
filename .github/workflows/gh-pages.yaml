@@ -3,20 +3,29 @@ name: GitHub Pages
 on:
   push:
     branches:
-      - master # 或你的主要分支名稱
+      - master
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-ruby@v1
-        with:
-          ruby-version: '3.0'
-      - run: bundle install
-      - run: bundle exec jekyll build
-      - uses: actions/deploy-pages@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-strategy: 'STATIC'
-          static_site_generator: jekyll
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.0
+
+    - name: Install dependencies
+      run: bundle install
+
+    - name: Build site
+      run: bundle exec jekyll build
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./_site
