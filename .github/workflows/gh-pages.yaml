@@ -1,0 +1,22 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # 或你的主要分支名稱
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '3.4.2' # 或你使用的 Ruby 版本
+      - run: bundle install
+      - run: bundle exec jekyll build
+      - uses: actions/deploy-pages@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-strategy: 'STATIC'
+          static_site_generator: jekyll
